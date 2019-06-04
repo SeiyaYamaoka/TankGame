@@ -37,10 +37,12 @@ public class Loop extends SurfaceView implements  Runnable, SurfaceHolder.Callba
     Bitmap tankbasebmp,tanktopbmp;
     Bitmap tamabmp;
     Bitmap blockbmp;
+    Bitmap explosionbmp;
 
     float tankx = 650f,tanky = 370f;
     float pretankx =650f,pretanky = 270f;//前の自機座標
 
+    ArrayList<Animation> animations = new ArrayList<>();
 
     ArrayList<Bullet> bulletlists = new ArrayList<Bullet>();
     //弾がスクリーン移動に影響するかのフラグ
@@ -146,7 +148,27 @@ public class Loop extends SurfaceView implements  Runnable, SurfaceHolder.Callba
 
             }
             //弾を消す処理
-            for(int i = 0; i < bulletlists.size(); i++){
+            BLoop:for(int i = 0; i < bulletlists.size(); i++){
+                for(int mj=0;mj<map.mapsizex;mj++) {
+                    for (int mk = 0; mk < map.mapsizey; mk++) {
+                        if (map.amap[mj][mk] == 1) {
+                            //マップに接触したとき爆発させる。
+                            if(bulletlists.get(i).x - 8 < (mj * (map.radius) + 96 - map.screenx) && bulletlists.get(i).x + 8 > (mj * map.radius) -  map.screenx
+                                && bulletlists.get(i).y - 8 < (mk * (map.radius) + 96 - map.screeny) && bulletlists.get(i).y + 8 > (mk * map.radius) -  map.screeny){
+
+                                    ExplosionAni a = new ExplosionAni();
+                                    a.Init(bulletlists.get(i).x,bulletlists.get(i).y );
+                                    animations.add(a);
+
+                                    bulletlists.remove(i);
+                                    break BLoop;
+                            }
+
+                        }
+                    }
+                }
+
+                //マップ外に出た場合に弾を消す
                 if(bulletlists.get(i).x < -20 || bulletlists.get(i).x >= VIEW_WIDTH+20 || bulletlists.get(i).y < -20 || bulletlists.get(i).y >= VIEW_HEIGHT+20) {
                     bulletlists.remove(i);
                     break;
@@ -157,6 +179,14 @@ public class Loop extends SurfaceView implements  Runnable, SurfaceHolder.Callba
 
                 bulletlists.get(i).Update(bscreenxflg,bscreenyflg,movex,movey);
 
+            }
+
+            //アニメーション更新
+            for(int i = 0;i<animations.size();i++) {
+                animations.get(i).Update(bscreenxflg,bscreenyflg,movex,movey);
+                if(animations.get(i).Endflg == true){
+                    animations.remove(i);
+                }
             }
 
             tankbasematrix.postScale(1.5f,1.5f);
@@ -185,12 +215,16 @@ public class Loop extends SurfaceView implements  Runnable, SurfaceHolder.Callba
             for(int i = 0; i < bulletlists.size(); i++){
                 bulletlists.get(i).Draw(canvas,tamabmp);
             }
+            //爆発アニメーション
+            for(int i = 0;i<animations.size();i++) {
+                animations.get(i).Draw(canvas,explosionbmp);
+            }
 
             //左が四角で右が〇
             touchoperation.drawpoint(canvas,p);
 
             //canvas.drawText("WIDTH:"+getWidth()+"HEIGHT:" + getHeight() ,0,40,p);
-//            fps.DrawFPS(canvas,p);
+            fps.DrawFPS(canvas,p);
 //            debugtextdrow(canvas,p);
 //            touchoperation.debugdraw(canvas,p);
 
@@ -207,7 +241,7 @@ public class Loop extends SurfaceView implements  Runnable, SurfaceHolder.Callba
 //            colpaint.setColor(Color.YELLOW);
 //            colpaint.setAlpha(50);
 //
-            canvas.drawRect((tankx-38), (tanky-38), (tankx+38), (tanky+38), colpaint);
+//            canvas.drawRect((tankx-38), (tanky-38), (tankx+38), (tanky+38), colpaint);
 //            canvas.drawRect((tankx-36), (tanky-36), (tankx-48), (tanky+36), p);
 
 //            canvas.drawRect((tankx-48), (tanky-48), (tankx-36), (tanky-36), downp2);
@@ -305,6 +339,7 @@ public class Loop extends SurfaceView implements  Runnable, SurfaceHolder.Callba
         canvas.drawText("movey   =" + movey     ,400,320,p);
         canvas.drawText("pretankx   =" + (tankx-pretankx)     ,0,340,p);
         canvas.drawText("pretanky   =" + (tanky-pretanky)     ,200,340,p);
+        canvas.drawText("animetionsize   =" + animations.size()     ,0,360,p);
 //        loop.up1flg = false;
 //        loop.up2flg = false;
        // canvas.drawText("ONE_MILLI_TO_NANO=" + ONE_MILLI_TO_NANO,0,140,p);
@@ -325,6 +360,9 @@ public class Loop extends SurfaceView implements  Runnable, SurfaceHolder.Callba
             tamabmp = BitmapFactory.decodeStream(inputStream);
             inputStream = assetManager.open("tankmapthip1.png");
             blockbmp = BitmapFactory.decodeStream(inputStream);
+            //爆発画像
+            inputStream = assetManager.open("bomb.png");
+            explosionbmp = BitmapFactory.decodeStream(inputStream);
             inputStream.close();
 
         }catch(IOException e){
