@@ -20,9 +20,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 //既知のバグ等
-//ブロックに突っ込みながらアニメーションを実行させると、アニメーション位置が移動する。移動しない時もある
-//bscreenxflg yflg　がおかしいと思われ。それかアニメーションクラスでmovex　yを使わないようにするか
-//ブロックにぶつかると抜けることもあるため、ぶつかると体力HPを減らす仕様で考えてる。
+
 
 
 public class Loop extends SurfaceView implements  Runnable, SurfaceHolder.Callback {
@@ -524,10 +522,11 @@ public class Loop extends SurfaceView implements  Runnable, SurfaceHolder.Callba
             if (tankx <= 600) {
                 if(hitmovex == false) {
                     map.screenx += movex;
+                    bscreenxflg = true;
                 }else{
                     //map.screenx += (tankx-pretankx);
                 }
-                bscreenxflg = true;
+
                 tankx = 600;
             }
         }
@@ -540,11 +539,11 @@ public class Loop extends SurfaceView implements  Runnable, SurfaceHolder.Callba
             if (tanky <= 340) {
                 if(hitmovey == false) {
                     map.screeny += movey;
-
+                    bscreenyflg = true;
                 }else{
                     //map.screeny += (tanky-pretanky);
                 }
-                bscreenyflg = true;
+
                 tanky = 340;
             }
         }
@@ -558,11 +557,11 @@ public class Loop extends SurfaceView implements  Runnable, SurfaceHolder.Callba
             if (tankx >= 680) {
                 if(hitmovex == false) {
                     map.screenx += movex;
-
+                    bscreenxflg = true;
                 }else{
                    // map.screenx += (tankx-pretankx);
                 }
-                bscreenxflg = true;
+
                 tankx = 680;
             }
         }
@@ -575,11 +574,11 @@ public class Loop extends SurfaceView implements  Runnable, SurfaceHolder.Callba
             if (tanky >= 380) {
                 if(hitmovey == false) {
                     map.screeny += movey;
-
+                    bscreenyflg = true;
                 }else{
                    // map.screeny += (tanky-pretanky);
                 }
-                bscreenyflg = true;
+
                 tanky = 380;
             }
         }
