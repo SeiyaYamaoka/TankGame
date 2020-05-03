@@ -18,12 +18,12 @@ public class ExplosionAni extends Animation {
     int Maxframe;
 
     @Override
-    public void Init(float nx,float ny){
+    public void Init(float nx,float ny,float sw,float sh){
         Typeani = 1;
         nowCnt = -1;
         MaxCntani = 10;
-        sizex = 64;
-        sizey = 64;
+        sizex = sw;
+        sizey = sh;
         x = nx;
         y = ny;
         Endflg = false;
@@ -55,7 +55,7 @@ public class ExplosionAni extends Animation {
             y -= movey;
         }
         src.set(64*nowCnt,0,64*(nowCnt + 1),64);
-        dst.set((int)x-sizex,(int)y-sizey,(sizex*2)+(int)x-sizex,(sizey*2)+(int)y-sizey);
+        dst.set((int)(x-sizex),(int)(y-sizey),(int)((sizex*2)+x-sizex),(int)((sizey*2)+y-sizey));
 
 
     }

@@ -23,12 +23,13 @@ public class FPS {
         int fps;
 
         int cnt = 0;
-        long etime = 1;
-        int cntmae=0;
+        long etime = 0;
+        int cntm = 0;
 
 
         public void fpsStart(){
             startTime = System.nanoTime();
+            cnt++;
 
       }
         public void fpsSleep(){
@@ -49,9 +50,16 @@ public class FPS {
         }
 
     public void DrawFPS(Canvas canvas, Paint p){
-        canvas.drawText("fps=" + fps ,0,20,p);
+        canvas.drawText("fps=" + fps ,0,200,p);
 //        canvas.drawText("startTime=" + startTime ,0,40,p);
-//        canvas.drawText("elapsedTime=" + elapsedTime ,0,60,p);
+        //canvas.drawText("elapsedTime=" + elapsedTime ,0,60,p);
+//        if(cnt%60==0){
+//            cntm++;
+//            etime += elapsedTime;
+//            log("et" + etime + "cntm" + cntm);
+            //log("elapsedTime=" + elapsedTime);
+  //      }
+
 //        canvas.drawText("oneCycle=" + oneCycle ,0,80,p);
 //        canvas.drawText("sleepTime=" + sleepTime ,0,100,p);
 //        canvas.drawText("ONE_SEC_TO_NANO=" + ONE_SEC_TO_NANO ,0,120,p);

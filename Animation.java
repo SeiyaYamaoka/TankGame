@@ -6,7 +6,7 @@ import android.graphics.Canvas;
 public class Animation {
     public float x = -100,y = -100;
     //画面上のサイズ
-    public int sizex,sizey;
+    public float sizex,sizey;
     //アニメーション数
     public int MaxCntani;
     //アニメーションカウント
@@ -16,7 +16,8 @@ public class Animation {
     //
     public int Typeani;
 
-    public void Init(float x,float y){
+    //座標ｘｙ　サイズｗｈ
+    public void Init(float x,float y,float sw,float sh){
 
     }
     public void Update(boolean screenxflg,boolean screenyflg,double movex,double movey){
